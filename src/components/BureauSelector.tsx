@@ -6,6 +6,7 @@ import { CreditCard, Info, RefreshCw } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface BureauSelectorProps {
   bureauReports: Record<BureauType, CreditReport>;
@@ -44,18 +45,31 @@ export default function BureauSelector({
   };
 
   return (
-    <div className="glass-card p-6 h-full">
+    <motion.div 
+      className="glass-card p-6 h-full"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
-          <CreditCard className="h-5 w-5 mr-2 text-primary" />
+          <motion.div 
+            initial={{ rotate: 0 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear", repeatDelay: 5 }}
+          >
+            <CreditCard className="h-5 w-5 mr-2 text-primary" />
+          </motion.div>
           <h2 className="font-semibold text-lg">Select Credit Bureau</h2>
         </div>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                <Info className="h-4 w-4" />
-              </Button>
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                  <Info className="h-4 w-4" />
+                </Button>
+              </motion.div>
             </TooltipTrigger>
             <TooltipContent className="glass-dark border-0">
               <p className="max-w-xs text-sm">
@@ -66,7 +80,20 @@ export default function BureauSelector({
         </TooltipProvider>
       </div>
 
-      <div className="space-y-3">
+      <motion.div 
+        className="space-y-3"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.1
+            }
+          }
+        }}
+      >
         {Object.values(bureauReports).map((report, index) => {
           const bureau = report.bureau;
           const bureauColor = getBureauColor(bureau);
@@ -74,20 +101,48 @@ export default function BureauSelector({
           const isCurrentlyRefreshing = isRefreshing === bureau;
 
           return (
-            <div
+            <motion.div
               key={bureau}
-              className={`glass rounded-xl p-4 transition-all duration-300 animate-fade-in hover:shadow-lg ${
+              className={`glass rounded-xl p-4 transition-all duration-300 ${
                 isSelected ? "border-primary/40 bg-white/10" : "border-transparent"
               }`}
-              style={{ animationDelay: `${index * 100}ms` }}
+              variants={{
+                hidden: { opacity: 0, x: -20 },
+                visible: { 
+                  opacity: 1, 
+                  x: 0,
+                  transition: {
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 15,
+                    delay: index * 0.1
+                  }
+                }
+              }}
+              whileHover={{ 
+                scale: 1.02, 
+                boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
+                transition: { duration: 0.2 } 
+              }}
+              whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center justify-between">
-                <button
+                <motion.button
                   onClick={() => onSelectBureau(bureau)}
                   className="flex items-center flex-1"
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <div 
+                  <motion.div 
                     className={`h-3 w-3 rounded-full mr-3 bg-${bureauColor}`}
+                    animate={isSelected ? {
+                      scale: [1, 1.2, 1],
+                      boxShadow: [
+                        "0 0 0 rgba(255, 255, 255, 0)",
+                        "0 0 10px rgba(255, 255, 255, 0.5)",
+                        "0 0 0 rgba(255, 255, 255, 0)"
+                      ]
+                    } : {}}
+                    transition={{ duration: 2, repeat: isSelected ? Infinity : 0, repeatDelay: 1 }}
                   />
                   <div className="text-left">
                     <h3 className="font-medium">{bureau}</h3>
@@ -95,29 +150,35 @@ export default function BureauSelector({
                       Updated: {formatDate(report.lastUpdated)}
                     </p>
                   </div>
-                </button>
+                </motion.button>
 
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8 rounded-full"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRefresh(bureau);
-                  }}
-                  disabled={isCurrentlyRefreshing}
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  <RefreshCw
-                    className={`h-4 w-4 ${
-                      isCurrentlyRefreshing ? "animate-spin" : ""
-                    }`}
-                  />
-                </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 rounded-full"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRefresh(bureau);
+                    }}
+                    disabled={isCurrentlyRefreshing}
+                  >
+                    <motion.div
+                      animate={isCurrentlyRefreshing ? { rotate: 360 } : {}}
+                      transition={{ duration: 1, repeat: isCurrentlyRefreshing ? Infinity : 0, ease: "linear" }}
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                    </motion.div>
+                  </Button>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

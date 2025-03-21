@@ -2,6 +2,7 @@
 import { getScoreColor, getScoreRating } from "@/data/mockData";
 import { CreditReport } from "@/types/credit";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 interface CreditScoreCircleProps {
   report: CreditReport;
@@ -63,13 +64,17 @@ export default function CreditScoreCircle({ report, size = "md" }: CreditScoreCi
   const offset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div 
-      className={`relative credit-score-circle ${circleSize} transition-all duration-500 hover:scale-105`}
+    <motion.div 
+      className={`relative credit-score-circle ${circleSize} transition-all duration-500`}
       style={{ 
         filter: `drop-shadow(0 0 10px ${scoreColor === 'credit-excellent' ? '#22c55e40' : 
-                                         scoreColor === 'credit-good' ? '#3b82f640' : 
-                                         scoreColor === 'credit-fair' ? '#f59e0b40' : '#ef444440'})` 
+                                       scoreColor === 'credit-good' ? '#3b82f640' : 
+                                       scoreColor === 'credit-fair' ? '#f59e0b40' : '#ef444440'})` 
       }}
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+      whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
     >
       {/* Background Circle */}
       <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
@@ -80,24 +85,39 @@ export default function CreditScoreCircle({ report, size = "md" }: CreditScoreCi
           className="fill-none stroke-secondary/60"
           strokeWidth="8"
         />
-        <circle
+        <motion.circle
           cx="50"
           cy="50"
           r={radius}
           className={`fill-none stroke-${scoreColor}`}
           strokeWidth="8"
           strokeDasharray={circumference}
-          strokeDashoffset={offset}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: offset }}
+          transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
           strokeLinecap="round"
-          style={{ transition: "stroke-dashoffset 1s ease-in-out" }}
         />
       </svg>
       
       {/* Centered Text */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className={`font-bold ${circleSize.includes('text')}`}>{animatedScore}</div>
-        <div className={`${textSize} font-medium text-${scoreColor}`}>{scoreRating}</div>
+        <motion.div 
+          className={`font-bold ${circleSize.includes('text')}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 1 }}
+        >
+          {animatedScore}
+        </motion.div>
+        <motion.div 
+          className={`${textSize} font-medium text-${scoreColor}`}
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1.2 }}
+        >
+          {scoreRating}
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
