@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
@@ -15,14 +14,14 @@ export default function AnimatedGradient({
   children,
   className = "",
   intensity = "medium",
-  color1 = "rgba(59, 130, 246, 0.5)",
-  color2 = "rgba(139, 92, 246, 0.5)",
-  duration = 8,
+  color1 = "rgba(30, 64, 175, 0.7)",  // Darker blue
+  color2 = "rgba(0, 0, 0, 0.9)",      // Nearly black
+  duration = 10,
 }: AnimatedGradientProps) {
   const intensityValues = {
-    light: 0.1,
-    medium: 0.2,
-    strong: 0.4,
+    light: 0.6,
+    medium: 0.8,
+    strong: 1,
   };
 
   const opacityValue = intensityValues[intensity];
@@ -44,7 +43,7 @@ export default function AnimatedGradient({
           background: `linear-gradient(135deg, ${color1}, ${color2}, ${color1})`,
           backgroundSize: "400% 400%",
           opacity: opacityValue,
-          filter: "blur(120px)",
+          filter: "blur(80px)",
         }}
       />
       <div className="relative z-10">{children}</div>

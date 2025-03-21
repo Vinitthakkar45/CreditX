@@ -1,5 +1,5 @@
 
-export type BureauType = 'CIBIL' | 'Experian' | 'Equifax' | 'CRIF';
+export type BureauType = 'Normalized Evaluation' |'CIBIL' | 'Experian' | 'Equifax';
 
 export interface Loan {
   amount: number;

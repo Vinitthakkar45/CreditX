@@ -11,7 +11,6 @@ import {
   ResponsiveContainer,
   TooltipProps,
 } from "recharts";
-import { getBureauColor } from "@/data/mockData";
 import { ChartBarIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -22,7 +21,6 @@ interface ComparisonChartProps {
 interface ChartData {
   bureau: BureauType;
   score: number;
-  color: string;
 }
 
 export default function ComparisonChart({ reports }: ComparisonChartProps) {
@@ -31,7 +29,6 @@ export default function ComparisonChart({ reports }: ComparisonChartProps) {
   const chartData: ChartData[] = Object.values(reports).map((report) => ({
     bureau: report.bureau,
     score: report.creditScore,
-    color: getBureauColor(report.bureau),
   }));
 
   // Custom tooltip

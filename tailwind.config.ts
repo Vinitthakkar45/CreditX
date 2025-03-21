@@ -120,7 +120,9 @@ export default {
 				'scale-in': 'scale-in 0.3s ease-out',
 				'slide-in': 'slide-in 0.4s ease-out',
 				'pulse-glow': 'pulse-glow 3s infinite ease-in-out',
-				'rotate-circle': 'rotate-circle 30s linear infinite'
+				'rotate-circle': 'rotate-circle 30s linear infinite',
+				'typing': 'typing 3.5s steps(40, end)',
+				'blink-caret': 'blink-caret 0.75s step-end infinite'
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
