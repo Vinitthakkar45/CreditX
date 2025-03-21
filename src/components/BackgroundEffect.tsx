@@ -31,14 +31,16 @@ export default function BackgroundEffect() {
         y: number;
       };
       alpha: number;
+      pulse: number;
+      pulseDirection: boolean;
     }
 
     // Generate random circles
     const circles: Circle[] = [];
-    const colors = ["#3b82f6", "#22c55e", "#8b5cf6", "#f59e0b"];
+    const colors = ["#3b82f6", "#22c55e", "#8b5cf6", "#f59e0b", "#6366f1", "#0ea5e9"];
 
     for (let i = 0; i < 15; i++) {
-      const radius = Math.random() * 100 + 50;
+      const radius = Math.random() * 120 + 50;
       const x = Math.random() * (canvas.width - radius * 2) + radius;
       const y = Math.random() * (canvas.height - radius * 2) + radius;
       
@@ -52,6 +54,8 @@ export default function BackgroundEffect() {
           y: (Math.random() - 0.5) * 0.2,
         },
         alpha: Math.random() * 0.05 + 0.02,
+        pulse: 0,
+        pulseDirection: Math.random() > 0.5
       });
     }
 
@@ -74,6 +78,15 @@ export default function BackgroundEffect() {
         if (circle.y - circle.radius <= 0 || circle.y + circle.radius >= canvas.height) {
           circle.velocity.y *= -1;
         }
+        
+        // Pulse effect
+        if (circle.pulseDirection) {
+          circle.pulse += 0.005;
+          if (circle.pulse >= 1) circle.pulseDirection = false;
+        } else {
+          circle.pulse -= 0.005;
+          if (circle.pulse <= 0) circle.pulseDirection = true;
+        }
 
         // Draw circle
         ctx.beginPath();
@@ -83,14 +96,18 @@ export default function BackgroundEffect() {
           0,
           circle.x,
           circle.y,
-          circle.radius
+          circle.radius * (1 + circle.pulse * 0.2)
         );
+        
+        const alpha = circle.alpha * (1 + circle.pulse * 0.5);
+        const alphaHex = Math.floor(alpha * 255).toString(16).padStart(2, "0");
+        
         gradient.addColorStop(0, `${circle.color}00`);
-        gradient.addColorStop(0.5, `${circle.color}${Math.floor(circle.alpha * 255).toString(16).padStart(2, "0")}`);
+        gradient.addColorStop(0.5, `${circle.color}${alphaHex}`);
         gradient.addColorStop(1, `${circle.color}00`);
         
         ctx.fillStyle = gradient;
-        ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
+        ctx.arc(circle.x, circle.y, circle.radius * (1 + circle.pulse * 0.2), 0, Math.PI * 2);
         ctx.fill();
       });
 
