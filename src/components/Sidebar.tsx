@@ -104,7 +104,7 @@ export default function Sidebar({ title }: { title: string }) {
         </motion.ul>
       </nav>
 
-      <motion.div
+      {/* <motion.div
         className="mt-auto p-4 glass rounded-xl"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -121,12 +121,8 @@ export default function Sidebar({ title }: { title: string }) {
             whileTap={{ scale: 0.95 }}>
             <FileText className="h-5 w-5 text-primary" />
           </motion.div>
-          <div>
-            <h4 className="text-sm font-medium">Need help?</h4>
-            <p className="text-xs text-muted-foreground">View documentation</p>
-          </div>
         </div>
-      </motion.div>
+      </motion.div> */}
     </motion.aside>
   );
 }

@@ -50,13 +50,21 @@ const [normal, setnormal] = useState<number>(650);
       const fetchData = async () => {
         try {
           const pan = state.pan_id;
+          const loantype = state.loan_type;
             const cibil = await axios.get(`https://elk-one-mosquito.ngrok-free.app/cibil/?pan_id=${pan}`);
             const equifax = await axios.get(`https://elk-one-mosquito.ngrok-free.app/equifax/?pan_id=${pan}`);
             const experian = await axios.get(`https://elk-one-mosquito.ngrok-free.app/experian/?pan_id=${pan}`);
             const crif_highmark =  await axios.get(`https://elk-one-mosquito.ngrok-free.app/crif_highmark/?pan_id=${pan}`);
             
-            console.log(cibil);
-            // const score = getNormalizedScore()
+            const cibilscore = cibil.data.message.CREDIT_SCORE;
+            const equifaxscore = equifax.data.message.CREDIT_SCORE;
+            const experianscore = experian.data.message.CREDIT_SCORE;
+            const crif_highmarkscore = crif_highmark.data.message.CREDIT_SCORE
+            
+            const normalscore = getNormalizedScore(cibilscore,crif_highmarkscore,equifaxscore,experianscore,loantype);
+            setnormal(normalscore)
+            
+            
 
           console.log("Fetched data:", );
           
