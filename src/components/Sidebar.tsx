@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageCircle, FileText, Home, Settings, Users } from "lucide-react";
+import { MessageCircle, FileText, Home, Users } from "lucide-react";
 import { motion } from "framer-motion";
 
 type SidebarItem = {
@@ -13,7 +13,7 @@ export default function Sidebar({ title }: { title: string }) {
   const sidebarItems: SidebarItem[] = [
     { icon: Users, label: "Users", active: title === "Users", href: "/" }, //for every user there is a different dashboard which will be routed via the user tile
     { icon: Home, label: "Dashboard", active: title === "Dashboard", href: "/" },
-    { icon: FileText, label: "Reports", active: title === "Reports", href: "/reports" },
+    { icon: FileText, label: "Reports", active: title === "Reports", href: "/report/user1" },
     { icon: MessageCircle, label: "Chat", active: title === "Chat", href: "/chat/user1" },
   ];
   return (
@@ -28,7 +28,7 @@ export default function Sidebar({ title }: { title: string }) {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}>
         <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-          CreditWatch
+          CreditX
         </h2>
       </motion.div>
 

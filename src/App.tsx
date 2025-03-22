@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Userpage from "./pages/users"
+import ReportPage from "./pages/report"
 // import ChatInterface from "@/components/ChatInterface";
 import Chat from "./pages/chat";
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/dashboard/:userId" element={<Index />} />
           <Route path="/chat/:userId" element={<Chat />} />
           <Route path="/" element={<Userpage />} /> 
+          <Route path="/report/:userId" element={<ReportPage />} /> 
           {/* <Route path="/users" element={<UsersPage />} />  */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

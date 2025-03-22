@@ -17,20 +17,16 @@ export default function Header() {
 
   return (
     <header className="glass-dark sticky top-0 z-10 flex h-16 items-center justify-between px-6 backdrop-blur-lg animate-fade-in">
-      <div className="flex items-center space-x-4">
-        <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-          CreditWatch
-        </h1>
-      </div>
+      
 
-      <div className="flex-1 mx-12">
+      <div className="flex-1 mx-7">
         <div
           className={`relative flex items-center transition-all duration-300 ${
             searchFocused ? "w-96" : "w-80"
           }`}
         >
           <Search
-            className={`absolute left-3 h-4 w-4 text-muted-foreground transition-all duration-300 ${
+            className={`absolute left-3 right-3 h-4 w-5 text-muted-foreground transition-all duration-300 ${
               searchFocused ? "text-primary" : ""
             }`}
           />
