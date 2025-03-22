@@ -55,10 +55,9 @@ const [normal, setnormal] = useState<number>(650);
             const experian = await axios.get(`http://localhost:8000/experian/?pan_id=${pan}`);
             const crif_highmark =  await axios.get(`http://localhost:8000/crif_highmark/?pan_id=${pan}`);
             
-            console.log(cibil);
+            console.log(cibil.data.message.CREDIT_SCORE);
             // const score = getNormalizedScore()
 
-          console.log("Fetched data:", );
           
         } catch (error) {
           console.error("Error fetching data:", error);
