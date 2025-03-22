@@ -50,10 +50,10 @@ const [normal, setnormal] = useState<number>(650);
       const fetchData = async () => {
         try {
           const pan = state.pan_id;
-            const cibil = await axios.get(`https://elk-one-mosquito.ngrok-free.app/cibil/?pan_id=${pan}`);
-            const equifax = await axios.get(`https://elk-one-mosquito.ngrok-free.app/equifax/?pan_id=${pan}`);
-            const experian = await axios.get(`https://elk-one-mosquito.ngrok-free.app/experian/?pan_id=${pan}`);
-            const crif_highmark =  await axios.get(`https://elk-one-mosquito.ngrok-free.app/crif_highmark/?pan_id=${pan}`);
+            const cibil = await axios.get(`http://localhost:8000/cibil/?pan_id=${pan}`);
+            const equifax = await axios.get(`http://localhost:8000/equifax/?pan_id=${pan}`);
+            const experian = await axios.get(`http://localhost:8000/experian/?pan_id=${pan}`);
+            const crif_highmark =  await axios.get(`http://localhost:8000/crif_highmark/?pan_id=${pan}`);
             
             console.log(cibil);
             // const score = getNormalizedScore()
