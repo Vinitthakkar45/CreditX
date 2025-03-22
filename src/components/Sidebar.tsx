@@ -13,8 +13,8 @@ export default function Sidebar({ title }: { title: string }) {
   const sidebarItems: SidebarItem[] = [
     { icon: Users, label: "Users", active: title === "Users", href: "/" }, //for every user there is a different dashboard which will be routed via the user tile
     { icon: Home, label: "Dashboard", active: title === "Dashboard", href: "/" },
-    { icon: FileText, label: "Reports", active: title === "Reports", href: "/report/user1" },
-    { icon: MessageCircle, label: "Chat", active: title === "Chat", href: "/chat/user1" },
+    { icon: FileText, label: "Reports", active: title === "Reports", href: "/" },
+    { icon: MessageCircle, label: "Chat", active: title === "Chat", href: "/" },
   ];
   return (
     <motion.aside

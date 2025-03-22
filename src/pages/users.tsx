@@ -138,32 +138,41 @@ const Users = () => {
         pan_id: "",
       }
     });
-    
+
     toast({
       title: "Navigation",
       description: `Opening dashboard for user ID: ${userId}`,
     });
   };
 
-  // Refresh user data
-  const handleRefresh = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      toast({
-        title: "Success",
-        description: "User data refreshed successfully",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to refresh data",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+
+  const handleChat = (userId: string) => {
+    navigate(`/chat/${userId}`,{
+      state:{
+        pan_id: "",
+      }
+    });
+
+    toast({
+      title: "Navigation",
+      description: `Opening dashboard for user ID: ${userId}`,
+    });
   };
+
+  const handleReport = (userId: string) => {
+    navigate(`/report/${userId}`,{
+      state:{
+        pan_id: "",
+      }
+    });
+
+    toast({
+      title: "Navigation",
+      description: `Opening dashboard for user ID: ${userId}`,
+    });
+  };
+
+
 
   // Status badge color mapping
   const getStatusColor = (status: User["status"]) => {
@@ -248,18 +257,6 @@ const Users = () => {
                     <UsersIcon className="h-6 w-6 text-primary" />
                     <h1 className="text-2xl font-semibold">User Management</h1>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-1.5"
-                    onClick={handleRefresh}
-                    disabled={isLoading}
-                  >
-                    <RefreshCw
-                      className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
-                    />
-                    Refresh
-                  </Button>
                 </div>
                 <p className="text-sm text-foreground/60 mb-6">
                   View and manage all registered users and their details
@@ -296,9 +293,6 @@ const Users = () => {
                 >
                   <User className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-xl font-medium mb-2">No Users Found</h3>
-                  <p className="text-foreground/60">
-                    Try adjusting your search or filters
-                  </p>
                 </motion.div>
               ) : (
                 <motion.div
@@ -314,7 +308,7 @@ const Users = () => {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           className="glass-dark rounded-lg p-5 cursor-pointer"
-                          onClick={() => handleUserClick(user.id)}
+                          
                         >
                           <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
@@ -376,8 +370,27 @@ const Users = () => {
                             variant="ghost"
                             size="sm"
                             className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
+                            onClick={() => handleUserClick(user.id)}
                           >
                             View Dashboard
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
+                            onClick={() => handleChat(user.id)}
+                          >
+                            Open chat
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
+                            onClick={() => handleReport(user.id)}
+                          >
+                            view report
                             <ArrowUpRight className="h-3.5 w-3.5" />
                           </Button>
                         </motion.div>
