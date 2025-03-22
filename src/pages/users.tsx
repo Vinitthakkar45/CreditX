@@ -138,13 +138,39 @@ const Users = () => {
         pan_id: "",
       }
     });
-    
+
     toast({
       title: "Navigation",
       description: `Opening dashboard for user ID: ${userId}`,
     });
   };
 
+
+  const handleChat = (userId: string) => {
+    navigate(`/chat/${userId}`,{
+      state:{
+        pan_id: "",
+      }
+    });
+
+    toast({
+      title: "Navigation",
+      description: `Opening dashboard for user ID: ${userId}`,
+    });
+  };
+
+  const handleReport = (userId: string) => {
+    navigate(`/report/${userId}`,{
+      state:{
+        pan_id: "",
+      }
+    });
+
+    toast({
+      title: "Navigation",
+      description: `Opening dashboard for user ID: ${userId}`,
+    });
+  };
   // Refresh user data
   const handleRefresh = async () => {
     setIsLoading(true);
@@ -296,9 +322,6 @@ const Users = () => {
                 >
                   <User className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-xl font-medium mb-2">No Users Found</h3>
-                  <p className="text-foreground/60">
-                    Try adjusting your search or filters
-                  </p>
                 </motion.div>
               ) : (
                 <motion.div
@@ -314,7 +337,7 @@ const Users = () => {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           className="glass-dark rounded-lg p-5 cursor-pointer"
-                          onClick={() => handleUserClick(user.id)}
+                          
                         >
                           <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
@@ -376,8 +399,27 @@ const Users = () => {
                             variant="ghost"
                             size="sm"
                             className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
+                            onClick={() => handleUserClick(user.id)}
                           >
                             View Dashboard
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
+                            onClick={() => handleChat(user.id)}
+                          >
+                            Open chat
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
+                            onClick={() => handleReport(user.id)}
+                          >
+                            view report
                             <ArrowUpRight className="h-3.5 w-3.5" />
                           </Button>
                         </motion.div>
