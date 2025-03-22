@@ -1,4 +1,3 @@
-
 import { CreditReport } from "@/types/credit";
 import { Badge } from "@/components/ui/badge";
 import { IdCard, User } from "lucide-react";
@@ -115,7 +114,7 @@ export default function UserDetails({ report }: UserDetailsProps) {
               transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
             >
               <motion.div 
-                className="h-full bg-gradient-to-r from-credit-poor via-credit-fair to-credit-excellent"
+                className="h-full bg-gradient-to-r from-credit-low via-credit-medium to-credit-high"
                 style={{ borderRadius: "inherit" }}
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}

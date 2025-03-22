@@ -1,7 +1,7 @@
 
 import { BureauType, CreditReport } from "../types/credit";
 
-// Helper function to get score rating
+
 export const getScoreRating = (score: number): 'Excellent' | 'Good' | 'Fair' | 'Poor' => {
   if (score >= 750) return 'Excellent';
   if (score >= 700) return 'Good';
@@ -9,7 +9,7 @@ export const getScoreRating = (score: number): 'Excellent' | 'Good' | 'Fair' | '
   return 'Poor';
 };
 
-// Helper function to get color based on score
+
 export const getScoreColor = (score: number): string => {
   if (score >= 750) return 'credit-excellent';
   if (score >= 700) return 'credit-good';
@@ -17,13 +17,13 @@ export const getScoreColor = (score: number): string => {
   return 'credit-poor';
 };
 
-// Mock data for credit reports from different bureaus
+
 export const mockCreditReports: Record<BureauType, CreditReport> = {
   'Normalized Evaluation': {
     bureau: 'Normalized Evaluation',
-    panNumber: 'ABCDE1234F',
+    panNumber: 'ye wali mock hai',
     username: 'Rahul Sharma',
-    creditScore: 765,
+    creditScore: 500,
     scoreRange: { min: 300, max: 900 },
     lastUpdated: '2023-05-15',
     currentLoans: [

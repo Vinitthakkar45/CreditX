@@ -49,9 +49,9 @@ const Users = () => {
     const fetchUsers = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get("http://localhost:4040/user/get?org_id=a3c5a7d8-0ce4-480e-8c5f-eb66f52d91ba");
-        console.log(response);
-
+        const response = await axios.get("http://127.0.0.1:8000/user/get?org_id=a3c5a7d8-0ce4-480e-8c5f-eb66f52d91ba");
+        // console.log(response);
+        // console.log("response.data:", response.data); 
         const formattedUsers = response.data.map((user, index) => ({
           id: String(index + 1),
           name: `${user.user_id.first_name} ${user.user_id.last_name}`.trim(),

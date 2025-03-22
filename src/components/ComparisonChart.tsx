@@ -1,4 +1,3 @@
-
 import { BureauType, CreditReport } from "@/types/credit";
 import {
   BarChart,
@@ -78,10 +77,7 @@ export default function ComparisonChart({ reports }: ComparisonChartProps) {
               tick={{ fill: "#94a3b8", fontSize: 12 }}
             />
             <YAxis
-              domain={[
-                300,
-                900,
-              ]}
+              domain={[300, 900]}
               axisLine={false}
               tickLine={false}
               tick={{ fill: "#94a3b8", fontSize: 12 }}
@@ -94,15 +90,11 @@ export default function ComparisonChart({ reports }: ComparisonChartProps) {
               onMouseEnter={(data) => setActiveBar(data.bureau)}
               onMouseLeave={() => setActiveBar(null)}
             >
-              {chartData.map((entry, index) => (
-                <rect
-                  key={`bar-${index}`}
-                  fill={`url(#color-${entry.bureau})`}
-                  className="transition-all duration-300"
-                  style={{
-                    filter: activeBar === entry.bureau ? `drop-shadow(0 0 8px rgba(255, 255, 255, 0.3))` : "none",
-                    opacity: activeBar && activeBar !== entry.bureau ? 0.6 : 1,
-                  }}
+              {chartData.map((entry) => (
+                <Bar
+                  key={`bar-${entry.bureau}`}
+                  dataKey="score"
+                  fill={`url(#color-${entry.bureau})`} // Properly applying gradient fill
                 />
               ))}
             </Bar>
@@ -118,23 +110,31 @@ export default function ComparisonChart({ reports }: ComparisonChartProps) {
                   x2="0"
                   y2="1"
                 >
-                  <stop 
-                    offset="0%" 
+                  <stop
+                    offset="0%"
                     stopColor={
-                      entry.bureau === "CIBIL" ? "#3b82f6" :
-                      entry.bureau === "Experian" ? "#22c55e" :
-                      entry.bureau === "Equifax" ? "#8b5cf6" : "#f59e0b"
-                    } 
-                    stopOpacity={0.9} 
+                      entry.bureau === "CIBIL"
+                        ? "#3b82f6" // Light Blue for CIBIL
+                        : entry.bureau === "Experian"
+                        ? "#22c55e" // Green for Experian
+                        : entry.bureau === "Equifax"
+                        ? "#8b5cf6" // Purple for Equifax
+                        : "#f59e0b" // Orange for others
+                    }
+                    stopOpacity={0.9}
                   />
-                  <stop 
-                    offset="100%" 
+                  <stop
+                    offset="100%"
                     stopColor={
-                      entry.bureau === "CIBIL" ? "#3b82f6" :
-                      entry.bureau === "Experian" ? "#22c55e" :
-                      entry.bureau === "Equifax" ? "#8b5cf6" : "#f59e0b"
-                    } 
-                    stopOpacity={0.3} 
+                      entry.bureau === "CIBIL"
+                        ? "#1e40af" // Darker Blue for CIBIL
+                        : entry.bureau === "Experian"
+                        ? "#166534" // Darker Green for Experian
+                        : entry.bureau === "Equifax"
+                        ? "#5b21b6" // Darker Purple for Equifax
+                        : "#b45309" // Darker Orange for others
+                    }
+                    stopOpacity={0.3}
                   />
                 </linearGradient>
               ))}

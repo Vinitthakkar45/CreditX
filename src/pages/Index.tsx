@@ -22,6 +22,79 @@ import axios from "axios";
 const Index = () => {
   const location = useLocation();
   const state = location.state || {};
+  const [creditData, setCreditData] = useState(mockCreditReports);
+  const [loanType, setLoanType] = useState(state.loan_type || "personal");
+  const [normal, setNormal] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const pan = state.pan_id;
+        // If pan doesn't exist, you might want to handle that case
+        if (!pan) {
+          console.error("No PAN ID provided");
+          setIsLoading(false);
+          return;
+        }
+  
+        // Fetch all data in parallel for better performance
+        const [cibilRes, equifaxRes, experianRes, crifRes] = await Promise.all([
+          axios.get(`http://127.0.0.1:7000/cibil/?pan_id=${pan}`),
+          axios.get(`http://127.0.0.1:7000/equifax/?pan_id=${pan}`),
+          axios.get(`http://127.0.0.1:7000/experian/?pan_id=${pan}`),
+          axios.get(`http://127.0.0.1:7000/crif_highmark/?pan_id=${pan}`)
+        ]);
+  
+        // Extract scores
+        const cibilScore = cibilRes.data.message.CREDIT_SCORE;
+        const equifaxScore = equifaxRes.data.message.CREDIT_SCORE;
+        const experianScore = experianRes.data.message.CREDIT_SCORE;
+        const crifScore = crifRes.data.message.CREDIT_SCORE;
+        
+        // Calculate normalized score
+        const normalizedScore = getNormalizedScore(
+          cibilScore,
+          crifScore,
+          equifaxScore,
+          experianScore,
+          loanType
+        );
+        
+        // Update normalized score state
+        setNormal(normalizedScore);
+        
+        // Fetch summary data
+        const summaryResponse = await axios.get(`http://127.0.0.1:7000/np`);
+        console.log("Summary data:", summaryResponse.data);
+        
+        // Create a deep copy of the summary data
+        const updatedCreditData = JSON.parse(JSON.stringify(summaryResponse.data.message));
+        
+        // Update the normalized score in the data
+        if (updatedCreditData["Normalized Evaluation"]) {
+          updatedCreditData["Normalized Evaluation"].creditScore = normalizedScore;
+        }
+        
+        // Update state with the new data
+        setCreditData(updatedCreditData);
+      } catch (error) {
+        console.error("Error fetching credit data:", error);
+        
+        // Fallback to mock data in case of error
+        // const updatedMockData = JSON.parse(JSON.stringify(mockCreditReports));
+        // if (updatedMockData["Normalized Evaluation"]) {
+        //   updatedMockData["Normalized Evaluation"].creditScore = normal;
+        // }
+        // setCreditData(updatedMockData);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, [state.pan_id, state.loan_type, loanType]); // Include dependencies
 
   function getNormalizedScore(cibil, crif, equifax, experian, loanType) {
     const weightConfig = {
@@ -38,42 +111,11 @@ const Index = () => {
 
     const weights = weightConfig[loanType];
 
-    const normalizedScore = (cibil * weights.cibil) +
-                            (crif * weights.crif) +
-                            (equifax * weights.equifax) +
-                            (experian * weights.experian);
+    const normalizedScore = (cibil * weights.cibil) +(crif * weights.crif) + (equifax * weights.equifax) + (experian * weights.experian);
 
     return normalizedScore;
 }
-const [normal, setnormal] = useState<number>(650);
 
-  useEffect(() => {
-    if (state.pan_id) {
-      const fetchData = async () => {
-        try {
-          const pan = state.pan_id;
-          const loantype = state.loan_type;
-            const cibil = await axios.get(`https://elk-one-mosquito.ngrok-free.app/cibil/?pan_id=${pan}`);
-            const equifax = await axios.get(`https://elk-one-mosquito.ngrok-free.app/equifax/?pan_id=${pan}`);
-            const experian = await axios.get(`https://elk-one-mosquito.ngrok-free.app/experian/?pan_id=${pan}`);
-            const crif_highmark =  await axios.get(`https://elk-one-mosquito.ngrok-free.app/crif_highmark/?pan_id=${pan}`);
-            // @ts-ignore
-            const cibilscore = cibil.data.message.CREDIT_SCORE;
-            const equifaxscore = equifax.data.message.CREDIT_SCORE;
-            const experianscore = experian.data.message.CREDIT_SCORE;
-            const crif_highmarkscore = crif_highmark.data.message.CREDIT_SCORE
-            
-            const normalscore = getNormalizedScore(cibilscore,crif_highmarkscore,equifaxscore,experianscore,loantype);
-            setnormal(normalscore);
-          
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-
-      fetchData();
-    }
-  }, [state.pan_id]);
   const [selectedBureau, setSelectedBureau] =
     useState<BureauType>("Normalized Evaluation");
 
@@ -81,7 +123,7 @@ const [normal, setnormal] = useState<number>(650);
     setSelectedBureau(bureau);
   };
 
-  const currentReport = mockCreditReports[selectedBureau];
+  const currentReport = creditData[selectedBureau];
 
   return (
     <AnimatedGradient>
@@ -149,7 +191,7 @@ const [normal, setnormal] = useState<number>(650);
                 className="col-span-12 lg:col-span-4"
                 variants={fadeIn}>
                 <BureauSelector
-                  bureauReports={mockCreditReports}
+                  bureauReports={creditData}
                   selectedBureau={selectedBureau}
                   onSelectBureau={handleSelectBureau}
                 />
@@ -165,7 +207,7 @@ const [normal, setnormal] = useState<number>(650);
               <motion.div
                 className="col-span-12 lg:col-span-8"
                 variants={fadeIn}>
-                <ComparisonChart reports={mockCreditReports} />
+                <ComparisonChart reports={creditData} />
               </motion.div>
 
               {/* Bottom row */}
