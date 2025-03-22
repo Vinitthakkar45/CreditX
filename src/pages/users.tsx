@@ -92,16 +92,17 @@ const Users = () => {
   }, [searchTerm, users]);
 
   // Navigate to user dashboard
-  const handleUserClick = (userId: string) => {
-    navigate(`/dashboard/${userId}`, {
+  const handleUserClick = (pan: String , last :string) => {
+    navigate(`/dashboard`, {
       state: {
-        pan_id: "",
+        pan_id: pan,
+        loan_type: last,
       },
     });
 
     toast({
       title: "Navigation",
-      description: `Opening dashboard for user ID: ${userId}`,
+      description: `Opening dashboard for user`,
     });
   };
 
@@ -321,7 +322,7 @@ const Users = () => {
                             variant="ghost"
                             size="sm"
                             className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
-                            onClick={() => handleUserClick(user.id)}>
+                            onClick={() => handleUserClick(user.pancard, user.lastActive)}>
                             View Dashboard
                             <ArrowUpRight className="h-3.5 w-3.5" />
                           </Button>
@@ -424,7 +425,7 @@ const Users = () => {
                           <Button
                             size="sm"
                             className="bg-primary hover:bg-primary/90"
-                            onClick={() => handleUserClick(user.id)}>
+                            onClick={() => handleUserClick(user.id,user.lastActive)}>
                             Open Dashboard
                           </Button>
                         </div>
