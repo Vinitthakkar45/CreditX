@@ -12,7 +12,7 @@ interface ReportSectionProps {
 const ReportSection = ({ title, children, delay = 0, className = "", icon }: ReportSectionProps) => {
   return (
     <motion.div
-      className={`bg-black/30 backdrop-blur-sm border border-white/5 rounded-lg p-5 ${className}`}
+      className={`bg-black/30 backdrop-blur-sm border border-white/5 rounded-lg p-5 ${className} glass-premium`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
