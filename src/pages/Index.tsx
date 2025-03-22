@@ -13,11 +13,61 @@ import { BureauType } from "@/types/credit";
 import { mockCreditReports } from "@/data/mockData";
 import { staggerContainer, fadeIn } from "@/utils/animation-variants";
 import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
 
 const Index = () => {
   const location = useLocation();
   const state = location.state || {};
-  
+
+  function getNormalizedScore(cibil, crif, equifax, experian, loanType) {
+    const weightConfig = {
+        "personal": { cibil: 0.5, crif: 0.2, equifax: 0.2, experian: 0.1 },
+        "business": { cibil: 0.3, crif: 0.4, equifax: 0.2, experian: 0.1 },
+        "home": { cibil: 0.4, crif: 0.3, equifax: 0.2, experian: 0.1 },
+        "car": { cibil: 0.35, crif: 0.25, equifax: 0.3, experian: 0.1 },
+        "education": { cibil: 0.3, crif: 0.3, equifax: 0.25, experian: 0.15 }
+    };
+
+    if (!weightConfig[loanType]) {
+        throw new Error("Invalid loan type provided.");
+    }
+
+    const weights = weightConfig[loanType];
+
+    // Calculate normalized score
+    const normalizedScore = (cibil * weights.cibil) +
+                            (crif * weights.crif) +
+                            (equifax * weights.equifax) +
+                            (experian * weights.experian);
+
+    return normalizedScore;
+}
+const [normal, setnormal] = useState<number>(650);
+
+  useEffect(() => {
+    if (state.pan_id) {
+      const fetchData = async () => {
+        try {
+          const pan = state.pan_id;
+            const cibil = await axios.get(`https://elk-one-mosquito.ngrok-free.app/cibil/?pan_id=${pan}`);
+            const equifax = await axios.get(`https://elk-one-mosquito.ngrok-free.app/equifax/?pan_id=${pan}`);
+            const experian = await axios.get(`https://elk-one-mosquito.ngrok-free.app/experian/?pan_id=${pan}`);
+            const crif_highmark =  await axios.get(`https://elk-one-mosquito.ngrok-free.app/crif_highmark/?pan_id=${pan}`);
+            
+            console.log(cibil);
+            // const score = getNormalizedScore()
+
+          console.log("Fetched data:", );
+          
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [state.pan_id]);
   const [selectedBureau, setSelectedBureau] =
     useState<BureauType>("Normalized Evaluation");
 
