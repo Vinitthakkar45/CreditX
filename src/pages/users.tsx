@@ -171,25 +171,8 @@ const Users = () => {
       description: `Opening dashboard for user ID: ${userId}`,
     });
   };
-  // Refresh user data
-  const handleRefresh = async () => {
-    setIsLoading(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      toast({
-        title: "Success",
-        description: "User data refreshed successfully",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to refresh data",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
+
 
   // Status badge color mapping
   const getStatusColor = (status: User["status"]) => {
@@ -274,18 +257,6 @@ const Users = () => {
                     <UsersIcon className="h-6 w-6 text-primary" />
                     <h1 className="text-2xl font-semibold">User Management</h1>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-1.5"
-                    onClick={handleRefresh}
-                    disabled={isLoading}
-                  >
-                    <RefreshCw
-                      className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
-                    />
-                    Refresh
-                  </Button>
                 </div>
                 <p className="text-sm text-foreground/60 mb-6">
                   View and manage all registered users and their details
