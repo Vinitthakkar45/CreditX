@@ -35,6 +35,7 @@ interface User {
 }
 
 
+
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -48,9 +49,7 @@ const Users = () => {
     const fetchUsers = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get("https://physically-improved-dolphin.ngrok-free.app/user/get?org_id=a3c5a7d8-0ce4-480e-8c5f-eb66f52d91ba",{
-          timeout: 5000
-        });
+        const response = await axios.get("http://localhost:4040/user/get?org_id=a3c5a7d8-0ce4-480e-8c5f-eb66f52d91ba");
         console.log(response);
 
         const formattedUsers = response.data.map((user, index) => ({
@@ -121,6 +120,7 @@ const Users = () => {
   };
 
   const handleReport = (userId: string) => {
+
     navigate(`/report/${userId}`, {
       state: {
         pan_id: "",

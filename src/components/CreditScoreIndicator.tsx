@@ -8,9 +8,9 @@ interface CreditScoreIndicatorProps {
 
 const CreditScoreIndicator = ({ score, bureau, className = "" }: CreditScoreIndicatorProps) => {
   const getScoreColor = (score: number) => {
-    if (score >= 750) return "text-credit-high";
-    if (score >= 650) return "text-credit-medium";
-    return "text-credit-low";
+    if (score >= 750) return "text-status-approved";
+    if (score >= 650) return "text-status-pending";
+    return "text-status-rejected";
   };
 
   const getBureauColor = (bureau: string) => {
@@ -23,7 +23,7 @@ const CreditScoreIndicator = ({ score, bureau, className = "" }: CreditScoreIndi
       case "experian":
         return "bg-bureau-experian/20 text-bureau-experian";
       default:
-        return "bg-gray-500/20 text-gray-400";
+        return "bg-gray-500/20 text-gray-500";
     }
   };
 
@@ -44,9 +44,9 @@ const CreditScoreIndicator = ({ score, bureau, className = "" }: CreditScoreIndi
           {score}
         </span>
       </div>
-      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
         <motion.div 
-          className={score >= 750 ? "bg-credit-high" : score >= 650 ? "bg-credit-medium" : "bg-credit-low"}
+          className={score >= 750 ? "bg-status-approved" : score >= 650 ? "bg-status-pending" : "bg-status-rejected"}
           style={{ height: "100%", width: "0%" }}
           animate={{ width: `${scorePercentage}%` }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
