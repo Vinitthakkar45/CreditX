@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios"
 import {
   Search,
   User,
@@ -28,6 +29,8 @@ interface User {
   lastActive: string;
   creditScore?: number;
 }
+
+
 
 // Dummy data for demonstration
 const DUMMY_USERS: User[] = [
@@ -87,13 +90,16 @@ const Users = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+
+
+
   // Simulate data fetching
   useEffect(() => {
     const fetchUsers = async () => {
       setIsLoading(true);
       try {
-        // Simulating API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const requestdata = await axios.get("");
+
         setUsers(DUMMY_USERS);
         setFilteredUsers(DUMMY_USERS);
       } catch (error) {
@@ -127,7 +133,12 @@ const Users = () => {
 
   // Navigate to user dashboard
   const handleUserClick = (userId: string) => {
-    navigate(`/dashboard/${userId}`);
+    navigate(`/dashboard/${userId}`,{
+      state:{
+        pan_id: "",
+      }
+    });
+    
     toast({
       title: "Navigation",
       description: `Opening dashboard for user ID: ${userId}`,

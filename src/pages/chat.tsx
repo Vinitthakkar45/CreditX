@@ -4,8 +4,11 @@ import Sidebar from "@/components/Sidebar";
 import AnimatedGradient from "@/components/AnimatedGradient";
 import BackgroundEffect from "@/components/BackgroundEffect";
 import ChatInterface from "@/components/ChatInterface";
+import { useLocation } from "react-router-dom";
 
 const Chat = () => {
+      const location = useLocation();
+      const state = location.state || {};
   return (
     <AnimatedGradient>
       <div className="flex min-h-screen bg-background overflow-hidden">
