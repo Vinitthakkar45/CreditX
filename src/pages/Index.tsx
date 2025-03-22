@@ -76,42 +76,50 @@ const Index = () => {
       <div className="flex-1 pl-64">
         <Header />
 
-        <motion.main
-          className="px-8 py-6"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible">
-          <div className="grid grid-cols-12 gap-6">
-            {/* Top row */}
-            <motion.div className="col-span-12 lg:col-span-8" variants={fadeIn}>
-              <CreditSummary report={currentReport} />
-            </motion.div>
+          <motion.main
+            className="px-8 py-6"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible">
+            <div className="grid grid-cols-12 gap-6">
+              {/* Top row */}
+              <motion.div
+                className="col-span-12 lg:col-span-8"
+                variants={fadeIn}>
+                <CreditSummary report={currentReport} />
+              </motion.div>
 
-            <motion.div className="col-span-12 lg:col-span-4" variants={fadeIn}>
-              <BureauSelector
-                bureauReports={mockCreditReports}
-                selectedBureau={selectedBureau}
-                onSelectBureau={handleSelectBureau}
-              />
-            </motion.div>
+              <motion.div
+                className="col-span-12 lg:col-span-4"
+                variants={fadeIn}>
+                <BureauSelector
+                  bureauReports={mockCreditReports}
+                  selectedBureau={selectedBureau}
+                  onSelectBureau={handleSelectBureau}
+                />
+              </motion.div>
 
-            {/* Middle row */}
-            <motion.div className="col-span-12 lg:col-span-4" variants={fadeIn}>
-              <UserDetails report={currentReport} />
-            </motion.div>
+              {/* Middle row */}
+              <motion.div
+                className="col-span-12 lg:col-span-4"
+                variants={fadeIn}>
+                <UserDetails report={currentReport} />
+              </motion.div>
 
-            <motion.div className="col-span-12 lg:col-span-8" variants={fadeIn}>
-              <ComparisonChart reports={mockCreditReports} />
-            </motion.div>
+              <motion.div
+                className="col-span-12 lg:col-span-8"
+                variants={fadeIn}>
+                <ComparisonChart reports={mockCreditReports} />
+              </motion.div>
 
-            {/* Bottom row */}
-            <motion.div className="col-span-12" variants={fadeIn}>
-              <LoanSummary report={currentReport} />
-            </motion.div>
-          </div>
-        </motion.main>
+              {/* Bottom row */}
+              <motion.div className="col-span-12" variants={fadeIn}>
+                <LoanSummary report={currentReport} />
+              </motion.div>
+            </div>
+          </motion.main>
+        </div>
       </div>
-    </div>
     </AnimatedGradient>
   );
 };

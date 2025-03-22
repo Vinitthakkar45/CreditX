@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios"
+import axios from "axios";
 import {
   Search,
   User,
@@ -9,7 +9,11 @@ import {
   Users as UsersIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -29,8 +33,6 @@ interface User {
   lastActive: string;
   creditScore?: number;
 }
-
-
 
 // Dummy data for demonstration
 const DUMMY_USERS: User[] = [
@@ -90,18 +92,24 @@ const Users = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-
-
-
   // Simulate data fetching
   useEffect(() => {
     const fetchUsers = async () => {
       setIsLoading(true);
       try {
-        const requestdata = await axios.get("");
+        const response = await axios.get("http://localhost:4040/user/get");
+        console.log(response.data[0]);
 
-        setUsers(DUMMY_USERS);
-        setFilteredUsers(DUMMY_USERS);
+        const formattedUsers = response.data.map((user, index) => ({
+          id: String(index + 1),
+          name: `${user.user_id.first_name} ${user.user_id.last_name}`.trim(),
+          pancard: user.user_id.pan || "N/A",
+          status: user.status ,
+          lastActive: user.loan_type, // Placeholder, update if available
+        }));
+
+        setUsers(formattedUsers);
+        setFilteredUsers(formattedUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
         toast({
@@ -133,10 +141,10 @@ const Users = () => {
 
   // Navigate to user dashboard
   const handleUserClick = (userId: string) => {
-    navigate(`/dashboard/${userId}`,{
-      state:{
+    navigate(`/dashboard/${userId}`, {
+      state: {
         pan_id: "",
-      }
+      },
     });
 
     toast({
@@ -145,12 +153,11 @@ const Users = () => {
     });
   };
 
-
   const handleChat = (userId: string) => {
-    navigate(`/chat/${userId}`,{
-      state:{
+    navigate(`/chat/${userId}`, {
+      state: {
         pan_id: "",
-      }
+      },
     });
 
     toast({
@@ -160,10 +167,10 @@ const Users = () => {
   };
 
   const handleReport = (userId: string) => {
-    navigate(`/report/${userId}`,{
-      state:{
+    navigate(`/report/${userId}`, {
+      state: {
         pan_id: "",
-      }
+      },
     });
 
     toast({
@@ -171,8 +178,6 @@ const Users = () => {
       description: `Opening dashboard for user ID: ${userId}`,
     });
   };
-
-
 
   // Status badge color mapping
   const getStatusColor = (status: User["status"]) => {
@@ -246,11 +251,10 @@ const Users = () => {
         <div className="flex-1 pl-64">
           <Header />
           <main className="p-6 h-[calc(100vh-64px)] overflow-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
+              transition={{ duration: 0.5, delay: 0.2 }}>
               <header className="mb-8">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
@@ -275,11 +279,10 @@ const Users = () => {
               </header>
 
               {isLoading ? (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="glass-dark rounded-lg py-20 flex items-center justify-center"
-                >
+                  className="glass-dark rounded-lg py-20 flex items-center justify-center">
                   <div className="flex flex-col items-center gap-4">
                     <RefreshCw className="h-10 w-10 text-primary animate-spin" />
                     <p className="text-foreground/60">Loading user data...</p>
@@ -289,8 +292,7 @@ const Users = () => {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="glass-dark rounded-lg py-20 text-center"
-                >
+                  className="glass-dark rounded-lg py-20 text-center">
                   <User className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-xl font-medium mb-2">No Users Found</h3>
                 </motion.div>
@@ -299,17 +301,14 @@ const Users = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ staggerChildren: 0.05 }}
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
-                >
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {filteredUsers.map((user) => (
                     <HoverCard key={user.id}>
                       <HoverCardTrigger asChild>
                         <motion.div
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          className="glass-dark rounded-lg p-5 cursor-pointer"
-                          
-                        >
+                          className="glass-dark rounded-lg p-5 cursor-pointer">
                           <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
@@ -341,10 +340,10 @@ const Users = () => {
                             </div>
                             <div>
                               <p className="text-xs text-foreground/60 mb-1">
-                                Last Active
+                                Loan Type
                               </p>
                               <p>
-                                {new Date(user.lastActive).toLocaleDateString()}
+                                {user.lastActive}
                               </p>
                             </div>
                           </div>
@@ -358,8 +357,7 @@ const Users = () => {
                                 <span
                                   className={`font-semibold text-lg ${getCreditScoreColor(
                                     user.creditScore
-                                  )}`}
-                                >
+                                  )}`}>
                                   {user.creditScore}
                                 </span>
                               </div>
@@ -370,8 +368,7 @@ const Users = () => {
                             variant="ghost"
                             size="sm"
                             className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
-                            onClick={() => handleUserClick(user.id)}
-                          >
+                            onClick={() => handleUserClick(user.id)}>
                             View Dashboard
                             <ArrowUpRight className="h-3.5 w-3.5" />
                           </Button>
@@ -379,8 +376,7 @@ const Users = () => {
                             variant="ghost"
                             size="sm"
                             className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
-                            onClick={() => handleChat(user.id)}
-                          >
+                            onClick={() => handleChat(user.id)}>
                             Open chat
                             <ArrowUpRight className="h-3.5 w-3.5" />
                           </Button>
@@ -388,8 +384,7 @@ const Users = () => {
                             variant="ghost"
                             size="sm"
                             className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
-                            onClick={() => handleReport(user.id)}
-                          >
+                            onClick={() => handleReport(user.id)}>
                             view report
                             <ArrowUpRight className="h-3.5 w-3.5" />
                           </Button>
@@ -406,7 +401,9 @@ const Users = () => {
                                 .join("")}
                             </div>
                             <div>
-                              <h4 className="font-semibold text-lg">{user.name}</h4>
+                              <h4 className="font-semibold text-lg">
+                                {user.name}
+                              </h4>
                               <p className="text-sm text-foreground/60">
                                 PAN: {user.pancard}
                               </p>
@@ -421,8 +418,9 @@ const Users = () => {
                                 Status
                               </p>
                               <Badge
-                                className={`mt-1 ${getStatusColor(user.status)}`}
-                              >
+                                className={`mt-1 ${getStatusColor(
+                                  user.status
+                                )}`}>
                                 {user.status.charAt(0).toUpperCase() +
                                   user.status.slice(1)}
                               </Badge>
@@ -453,15 +451,15 @@ const Users = () => {
                                         : "bg-red-500"
                                     }`}
                                     style={{
-                                      width: `${(user.creditScore / 900) * 100}%`,
-                                    }}
-                                  ></div>
+                                      width: `${
+                                        (user.creditScore / 900) * 100
+                                      }%`,
+                                    }}></div>
                                 </div>
                                 <span
                                   className={`font-medium ${getCreditScoreColor(
                                     user.creditScore
-                                  )}`}
-                                >
+                                  )}`}>
                                   {user.creditScore}
                                 </span>
                               </div>
@@ -473,8 +471,7 @@ const Users = () => {
                           <Button
                             size="sm"
                             className="bg-primary hover:bg-primary/90"
-                            onClick={() => handleUserClick(user.id)}
-                          >
+                            onClick={() => handleUserClick(user.id)}>
                             Open Dashboard
                           </Button>
                         </div>
