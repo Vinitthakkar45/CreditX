@@ -22,8 +22,7 @@ const App = () => (
           <Route path="/chat/:userId" element={<Chat />} />
           <Route path="/" element={<Userpage />} /> 
           <Route path="/report/:userId" element={<ReportPage />} /> 
-          {/* <Route path="/users" element={<UsersPage />} />  */}
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

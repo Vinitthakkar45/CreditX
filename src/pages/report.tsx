@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import ReportContent from "@/components/Report";
 import AnimatedGradient from "@/components/AnimatedGradient";
 import BackgroundEffect from "@/components/BackgroundEffect";
 
-const Chat = () => {
+const Report = () => {
   return (
     <AnimatedGradient>
       <div className="flex min-h-screen bg-background overflow-hidden">
@@ -53,18 +54,11 @@ const Chat = () => {
 
         <div className="flex-1 pl-64">
           <Header />
-          <main className="p-6 h-[calc(100vh-64px)]">
-            <div className="h-full flex flex-col">
-              {/* ADD your changes here */}
-            </div>
-          </main>
+          <ReportContent />
         </div>
       </div>
     </AnimatedGradient>
   );
 };
 
-export default Chat;
-
-
-// Help me design a UI according to the Theme and color pallete provided in the Image as a refrence and i have also provided the code of the example of my other WebTransportDatagramDuplexStream, pleas only make changes
+export default Report;
