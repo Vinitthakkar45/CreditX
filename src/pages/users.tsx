@@ -93,7 +93,7 @@ const Users = () => {
   }, [searchTerm, users]);
 
   // Navigate to user dashboard
-  const handleUserClick = (pan: String , last :string) => {
+  const handleUserClick = (pan: string , last :string) => {
     navigate(`/dashboard`, {
       state: {
         pan_id: pan,
