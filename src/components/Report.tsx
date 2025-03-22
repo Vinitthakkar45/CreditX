@@ -15,9 +15,10 @@ import CreditScoreIndicator from "@/components/CreditScoreIndicator";
 import ReportSection from "@/components/ReportSection";
 import TermItem from "@/components/TermItem";
 import DecisionBadge from "@/components/DecisionBadge";
+import { useEffect, useState } from "react";
 
-// Credit report data
-const reportData = {
+// Default data in case the API fails
+const defaultReportData = {
   "Applicant Profile Summary":
     "The applicant, Vikas Rambilas Mundada, has a stable income stream with a mix of rent, dividends, and interest income. He has high-value assets, including properties in Pune and equity shares. His bank statement shows a stable cash flow trend with regular high-value credits and debits. He has a high average monthly balance of ₹1,200,000 and no overdraft or negative balances. He has no cheque bounce instances and has paid no loan EMIs explicitly mentioned in the statement.",
 
@@ -44,14 +45,114 @@ const reportData = {
     "To mitigate the identified risks, the following actions can be taken: Mandatory collateral, guarantor requirement, EMI auto-debit mandates, and a shorter tenure. Additionally, the loan amount can be reduced, and the interest rate can be increased to manage the applicant's debt-to-income ratio and liability burden.",
 };
 
-// Bureau credit scores
-const bureauScores = [
+// Default bureau credit scores
+const defaultBureauScores = [
   { bureau: "CRIF Highmark", score: 760 },
   { bureau: "Equifax", score: 770 },
   { bureau: "Experian", score: 780 },
 ];
 
 const Report = () => {
+  const [reportData, setReportData] = useState(defaultReportData);
+  const [bureauScores, setBureauScores] = useState(defaultBureauScores);
+  const [userData, setUserData] = useState({
+    first_name: "Vikas Rambilas",
+    last_name: "Mundada",
+    pan: "ABCDE1234F",
+    loan_type: "Home Loan",
+    status: "pending"
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:4040/user/get?org_id=a3c5a7d8-0ce4-480e-8c5f-eb66f52d91ba');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        
+        const data = await response.json();
+        console.log("API Response:", data);
+        
+        // Process and map the data
+        if (data) {
+          // Update user data
+          setUserData({
+            first_name: data.first_name || "Vikas Rambilas",
+            last_name: data.last_name || "Mundada", 
+            pan: data.pan || "ABCDE1234F",
+            loan_type: data.loan_type || "Home Loan",
+            status: data.status || "pending"
+          });
+
+          // Extract credit scores if available
+          if (data.creditx_score) {
+            // Set bureau scores based on data
+            const newBureauScores = [];
+            
+            if (data.creditx_score?.["Creditworthiness Assessment"]) {
+              const assessment = data.creditx_score["Creditworthiness Assessment"];
+              
+              // Extract scores using regex
+              const crifMatch = assessment.match(/CRIF Highmark.*?(\d+)/);
+              const equifaxMatch = assessment.match(/Equifax.*?(\d+)/);
+              const experianMatch = assessment.match(/Experian.*?(\d+)/);
+              
+              if (crifMatch && crifMatch[1]) {
+                newBureauScores.push({ bureau: "CRIF Highmark", score: parseInt(crifMatch[1]) });
+              }
+              
+              if (equifaxMatch && equifaxMatch[1]) {
+                newBureauScores.push({ bureau: "Equifax", score: parseInt(equifaxMatch[1]) });
+              }
+              
+              if (experianMatch && experianMatch[1]) {
+                newBureauScores.push({ bureau: "Experian", score: parseInt(experianMatch[1]) });
+              }
+            }
+            
+            if (newBureauScores.length > 0) {
+              setBureauScores(newBureauScores);
+            }
+            
+            // Update report data
+            setReportData({
+              "Applicant Profile Summary": data.creditx_score["Applicant Profile Summary"] || defaultReportData["Applicant Profile Summary"],
+              "Creditworthiness Assessment": data.creditx_score["Creditworthiness Assessment"] || defaultReportData["Creditworthiness Assessment"],
+              "Identified Risks": data.creditx_score["Identified Risks"] || defaultReportData["Identified Risks"],
+              "Final Lending Decision": data.creditx_score["Final Lending Decision"] || defaultReportData["Final Lending Decision"],
+              "Justification for the Decision": data.creditx_score["Justification for the Decision"] || defaultReportData["Justification for the Decision"],
+              "Recommended Lending Terms": 
+                data.creditx_score["Recommended Lending Terms"] || defaultReportData["Recommended Lending Terms"],
+              "Risk Mitigation Suggestions": data.creditx_score["Risk Mitigation Suggestions"] || defaultReportData["Risk Mitigation Suggestions"]
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Keep default data on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="p-6 h-[calc(100vh-64px)] overflow-auto">
+        <div className="flex items-center justify-center h-full">
+          <div className="animate-pulse-slow flex flex-col items-center">
+            <div className="h-12 w-12 rounded-full bg-primary/20 animate-pulse mb-4"></div>
+            <p className="text-foreground/60">Loading report data...</p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="p-6 h-[calc(100vh-64px)] overflow-auto">
       <motion.div
@@ -68,7 +169,7 @@ const Report = () => {
         <ChevronRight className="h-4 w-4" />
         <span>Credit Assessment</span>
         <ChevronRight className="h-4 w-4" />
-        <span className="text-foreground">Vikas Rambilas Mundada</span>
+        <span className="text-foreground">{userData.first_name} {userData.last_name}</span>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -79,12 +180,12 @@ const Report = () => {
           transition={{ duration: 0.4 }}>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-semibold text-lg">
-              VM
+              {userData.first_name.charAt(0)}{userData.last_name.charAt(0)}
             </div>
             <div>
-              <h2 className="text-xl font-semibold">Vikas Rambilas Mundada</h2>
+              <h2 className="text-xl font-semibold">{userData.first_name} {userData.last_name}</h2>
               <p className="text-foreground/60 text-sm">
-                Application ID: LOAN-2023-10-42857
+                PAN: {userData.pan} | {userData.loan_type}
               </p>
             </div>
           </div>

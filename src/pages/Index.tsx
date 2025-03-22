@@ -66,7 +66,6 @@ const [normal, setnormal] = useState<number>(650);
             
             
 
-          console.log("Fetched data:", );
           
         } catch (error) {
           console.error("Error fetching data:", error);
