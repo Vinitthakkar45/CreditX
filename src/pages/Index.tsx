@@ -12,8 +12,12 @@ import BackgroundEffect from "@/components/BackgroundEffect";
 import { BureauType } from "@/types/credit";
 import { mockCreditReports } from "@/data/mockData";
 import { staggerContainer, fadeIn } from "@/utils/animation-variants";
+import { useLocation } from "react-router-dom";
 
 const Index = () => {
+  const location = useLocation();
+  const state = location.state || {};
+  
   const [selectedBureau, setSelectedBureau] =
     useState<BureauType>("Normalized Evaluation");
 
