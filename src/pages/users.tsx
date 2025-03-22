@@ -34,55 +34,7 @@ interface User {
   creditScore?: number;
 }
 
-// Dummy data for demonstration
-const DUMMY_USERS: User[] = [
-  {
-    id: "1",
-    name: "Rahul Sharma",
-    pancard: "ABCPS1234D",
-    status: "active",
-    lastActive: "2023-10-15",
-    creditScore: 765,
-  },
-  {
-    id: "2",
-    name: "Priya Patel",
-    pancard: "BNZPP5678F",
-    status: "active",
-    lastActive: "2023-10-14",
-    creditScore: 720,
-  },
-  {
-    id: "3",
-    name: "Aditya Singh",
-    pancard: "CRQAS9101G",
-    status: "pending",
-    lastActive: "2023-10-10",
-  },
-  {
-    id: "4",
-    name: "Neha Gupta",
-    pancard: "DLFNG2345H",
-    status: "active",
-    lastActive: "2023-10-12",
-    creditScore: 690,
-  },
-  {
-    id: "5",
-    name: "Vikram Mehta",
-    pancard: "EGBVM6789J",
-    status: "inactive",
-    lastActive: "2023-09-30",
-  },
-  {
-    id: "6",
-    name: "Anjali Desai",
-    pancard: "FHCAD1357K",
-    status: "active",
-    lastActive: "2023-10-13",
-    creditScore: 810,
-  },
-];
+
 
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -97,8 +49,8 @@ const Users = () => {
     const fetchUsers = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get("http://localhost:4040/user/get");
-        console.log(response.data[0]);
+        const response = await axios.get("http://localhost:4040/user/get?org_id=a3c5a7d8-0ce4-480e-8c5f-eb66f52d91ba");
+        console.log(response);
 
         const formattedUsers = response.data.map((user, index) => ({
           id: String(index + 1),
@@ -167,6 +119,7 @@ const Users = () => {
   };
 
   const handleReport = (userId: string) => {
+
     navigate(`/report/${userId}`, {
       state: {
         pan_id: "",
