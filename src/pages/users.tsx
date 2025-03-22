@@ -8,18 +8,15 @@ import {
   Users as UsersIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import SidebarLayout from "@/components/Sidebar";
+import Sidebar from "@/components/Sidebar";
 import AnimatedGradient from "@/components/AnimatedGradient";
 import BackgroundEffect from "@/components/BackgroundEffect";
+import Header from "@/components/Header";
 import { motion } from "framer-motion";
 
 // Define the user type
@@ -224,221 +221,246 @@ const Users = () => {
           />
         </div>
 
-        <SidebarLayout title="Users" />
-        <div className="p-6 w-full overflow-hidden animate-fade-in">
-          <header className="mb-8">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <UsersIcon className="h-6 w-6 text-creditwatch-accent" />
-                <h1 className="text-2xl font-semibold">User Management</h1>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5"
-                onClick={handleRefresh}
-                disabled={isLoading}
-              >
-                <RefreshCw
-                  className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
-                />
-                Refresh
-              </Button>
-            </div>
-            <p className="text-creditwatch-text mb-6">
-              View and manage all registered users and their details
-            </p>
+        <Sidebar title="Users" />
 
-            <div className="relative w-full max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search by name or PAN card..."
-                className="pl-10 bg-muted border-secondary"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </header>
+        <div className="flex-1 pl-64">
+          <Header />
+          <main className="p-6 h-[calc(100vh-64px)] overflow-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <header className="mb-8">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <UsersIcon className="h-6 w-6 text-primary" />
+                    <h1 className="text-2xl font-semibold">User Management</h1>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5"
+                    onClick={handleRefresh}
+                    disabled={isLoading}
+                  >
+                    <RefreshCw
+                      className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+                    />
+                    Refresh
+                  </Button>
+                </div>
+                <p className="text-sm text-foreground/60 mb-6">
+                  View and manage all registered users and their details
+                </p>
 
-          {isLoading ? (
-            <div className="glass-panel rounded-lg py-20 flex items-center justify-center">
-              <div className="flex flex-col items-center gap-4">
-                <RefreshCw className="h-10 w-10 text-primary animate-spin" />
-                <p className="text-creditwatch-text">Loading user data...</p>
-              </div>
-            </div>
-          ) : filteredUsers.length === 0 ? (
-            <div className="glass-panel rounded-lg py-20 text-center">
-              <User className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-xl font-medium mb-2">No Users Found</h3>
-              <p className="text-creditwatch-text">
-                Try adjusting your search or filters
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filteredUsers.map((user) => (
-                <HoverCard key={user.id}>
-                  <HoverCardTrigger asChild>
-                    <div
-                      className="glass-panel rounded-lg p-5 cursor-pointer hover-scale"
-                      onClick={() => handleUserClick(user.id)}
-                    >
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-creditwatch-highlight/20 flex items-center justify-center">
-                            <UserCheck className="h-5 w-5 text-creditwatch-highlight" />
-                          </div>
-                          <div>
-                            <h3 className="font-medium text-lg leading-tight">
-                              {user.name}
-                            </h3>
-                            <p className="text-creditwatch-text text-sm">
-                              ID: {user.id}
-                            </p>
-                          </div>
-                        </div>
-                        <Badge className={getStatusColor(user.status)}>
-                          {user.status.charAt(0).toUpperCase() +
-                            user.status.slice(1)}
-                        </Badge>
-                      </div>
+                <div className="relative w-full max-w-md">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search by name or PAN card..."
+                    className="pl-10 bg-background border-input"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </header>
 
-                      <div className="grid grid-cols-2 gap-4 mb-3">
-                        <div>
-                          <p className="text-xs text-creditwatch-text mb-1">
-                            PAN Card
-                          </p>
-                          <p className="font-mono tracking-wide">
-                            {user.pancard}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-creditwatch-text mb-1">
-                            Last Active
-                          </p>
-                          <p>
-                            {new Date(user.lastActive).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-
-                      {user.creditScore && (
-                        <div className="mt-4 pt-4 border-t border-white/5">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-creditwatch-text">
-                              Credit Score
-                            </span>
-                            <span
-                              className={`font-semibold text-lg ${getCreditScoreColor(
-                                user.creditScore
-                              )}`}
-                            >
-                              {user.creditScore}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full mt-4 text-creditwatch-highlight flex items-center justify-center gap-1.5 hover:bg-creditwatch-highlight/10"
-                      >
-                        View Dashboard
-                        <ArrowUpRight className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </HoverCardTrigger>
-
-                  <HoverCardContent className="glass-panel w-80 border-white/5 p-0 animate-scale-in">
-                    <div className="p-4 border-b border-white/5">
-                      <div className="flex gap-3 items-center">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-white font-semibold text-lg">
-                          {user.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-lg">{user.name}</h4>
-                          <p className="text-sm text-creditwatch-text">
-                            PAN: {user.pancard}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-4 space-y-3">
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <p className="text-xs text-creditwatch-text">
-                            Status
-                          </p>
-                          <Badge
-                            className={`mt-1 ${getStatusColor(user.status)}`}
-                          >
-                            {user.status.charAt(0).toUpperCase() +
-                              user.status.slice(1)}
-                          </Badge>
-                        </div>
-                        <div>
-                          <p className="text-xs text-creditwatch-text">
-                            Last Activity
-                          </p>
-                          <p className="text-sm mt-1">
-                            {new Date(user.lastActive).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-
-                      {user.creditScore && (
-                        <div>
-                          <p className="text-xs text-creditwatch-text mb-1">
-                            Credit Score
-                          </p>
-                          <div className="flex items-center gap-2">
-                            <div className="h-2 flex-1 bg-muted rounded-full overflow-hidden">
-                              <div
-                                className={`h-full ${
-                                  user.creditScore >= 750
-                                    ? "bg-green-500"
-                                    : user.creditScore >= 650
-                                    ? "bg-yellow-500"
-                                    : "bg-red-500"
-                                }`}
-                                style={{
-                                  width: `${(user.creditScore / 900) * 100}%`,
-                                }}
-                              ></div>
+              {isLoading ? (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="glass-dark rounded-lg py-20 flex items-center justify-center"
+                >
+                  <div className="flex flex-col items-center gap-4">
+                    <RefreshCw className="h-10 w-10 text-primary animate-spin" />
+                    <p className="text-foreground/60">Loading user data...</p>
+                  </div>
+                </motion.div>
+              ) : filteredUsers.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="glass-dark rounded-lg py-20 text-center"
+                >
+                  <User className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-xl font-medium mb-2">No Users Found</h3>
+                  <p className="text-foreground/60">
+                    Try adjusting your search or filters
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ staggerChildren: 0.05 }}
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+                >
+                  {filteredUsers.map((user) => (
+                    <HoverCard key={user.id}>
+                      <HoverCardTrigger asChild>
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="glass-dark rounded-lg p-5 cursor-pointer"
+                          onClick={() => handleUserClick(user.id)}
+                        >
+                          <div className="flex justify-between items-start mb-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                <UserCheck className="h-5 w-5 text-primary" />
+                              </div>
+                              <div>
+                                <h3 className="font-medium text-lg leading-tight">
+                                  {user.name}
+                                </h3>
+                                <p className="text-foreground/60 text-sm">
+                                  ID: {user.id}
+                                </p>
+                              </div>
                             </div>
-                            <span
-                              className={`font-medium ${getCreditScoreColor(
-                                user.creditScore
-                              )}`}
-                            >
-                              {user.creditScore}
-                            </span>
+                            <Badge className={getStatusColor(user.status)}>
+                              {user.status.charAt(0).toUpperCase() +
+                                user.status.slice(1)}
+                            </Badge>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4 mb-3">
+                            <div>
+                              <p className="text-xs text-foreground/60 mb-1">
+                                PAN Card
+                              </p>
+                              <p className="font-mono tracking-wide">
+                                {user.pancard}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-foreground/60 mb-1">
+                                Last Active
+                              </p>
+                              <p>
+                                {new Date(user.lastActive).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+
+                          {user.creditScore && (
+                            <div className="mt-4 pt-4 border-t border-white/5">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-foreground/60">
+                                  Credit Score
+                                </span>
+                                <span
+                                  className={`font-semibold text-lg ${getCreditScoreColor(
+                                    user.creditScore
+                                  )}`}
+                                >
+                                  {user.creditScore}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="w-full mt-4 text-primary flex items-center justify-center gap-1.5 hover:bg-primary/10"
+                          >
+                            View Dashboard
+                            <ArrowUpRight className="h-3.5 w-3.5" />
+                          </Button>
+                        </motion.div>
+                      </HoverCardTrigger>
+
+                      <HoverCardContent className="glass-dark w-80 border-white/5 p-0 animate-scale-in">
+                        <div className="p-4 border-b border-white/5">
+                          <div className="flex gap-3 items-center">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-semibold text-lg">
+                              {user.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-lg">{user.name}</h4>
+                              <p className="text-sm text-foreground/60">
+                                PAN: {user.pancard}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      )}
-                    </div>
 
-                    <div className="p-3 bg-muted/50 border-t border-white/5 flex justify-end">
-                      <Button
-                        size="sm"
-                        className="bg-creditwatch-highlight hover:bg-creditwatch-highlight/90"
-                        onClick={() => handleUserClick(user.id)}
-                      >
-                        Open Dashboard
-                      </Button>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-              ))}
-            </div>
-          )}
+                        <div className="p-4 space-y-3">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <p className="text-xs text-foreground/60">
+                                Status
+                              </p>
+                              <Badge
+                                className={`mt-1 ${getStatusColor(user.status)}`}
+                              >
+                                {user.status.charAt(0).toUpperCase() +
+                                  user.status.slice(1)}
+                              </Badge>
+                            </div>
+                            <div>
+                              <p className="text-xs text-foreground/60">
+                                Last Activity
+                              </p>
+                              <p className="text-sm mt-1">
+                                {new Date(user.lastActive).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+
+                          {user.creditScore && (
+                            <div>
+                              <p className="text-xs text-foreground/60 mb-1">
+                                Credit Score
+                              </p>
+                              <div className="flex items-center gap-2">
+                                <div className="h-2 flex-1 bg-background rounded-full overflow-hidden">
+                                  <div
+                                    className={`h-full ${
+                                      user.creditScore >= 750
+                                        ? "bg-green-500"
+                                        : user.creditScore >= 650
+                                        ? "bg-yellow-500"
+                                        : "bg-red-500"
+                                    }`}
+                                    style={{
+                                      width: `${(user.creditScore / 900) * 100}%`,
+                                    }}
+                                  ></div>
+                                </div>
+                                <span
+                                  className={`font-medium ${getCreditScoreColor(
+                                    user.creditScore
+                                  )}`}
+                                >
+                                  {user.creditScore}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="p-3 bg-background/10 border-t border-white/5 flex justify-end">
+                          <Button
+                            size="sm"
+                            className="bg-primary hover:bg-primary/90"
+                            onClick={() => handleUserClick(user.id)}
+                          >
+                            Open Dashboard
+                          </Button>
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
+                  ))}
+                </motion.div>
+              )}
+            </motion.div>
+          </main>
         </div>
       </div>
     </AnimatedGradient>

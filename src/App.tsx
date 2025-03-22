@@ -5,9 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import ChatPage from "./pages/chat";
-import UsersPage from "./pages/users";
-
+import Userpage from "./pages/users"
+// import ChatInterface from "@/components/ChatInterface";
+import Chat from "./pages/chat";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -17,9 +17,10 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/chat" element={<ChatPage />} /> 
-          <Route path="/users" element={<UsersPage />} /> 
+          <Route path="/dashboard/:userId" element={<Index />} />
+          <Route path="/chat/:userId" element={<Chat />} />
+          <Route path="/" element={<Userpage />} /> 
+          {/* <Route path="/users" element={<UsersPage />} />  */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
