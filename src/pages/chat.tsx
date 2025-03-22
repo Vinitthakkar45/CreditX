@@ -5,7 +5,7 @@ import AnimatedGradient from "@/components/AnimatedGradient";
 import BackgroundEffect from "@/components/BackgroundEffect";
 import ChatInterface from "@/components/ChatInterface";
 
-const Index = () => {
+const Chat = () => {
   return (
     <AnimatedGradient>
       <div className="flex min-h-screen bg-background overflow-hidden">
@@ -77,4 +77,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Chat;
