@@ -11,10 +11,9 @@ type SidebarItem = {
 
 export default function Sidebar({ title }: { title: string }) {
   const sidebarItems: SidebarItem[] = [
+    { icon: Users, label: "Users", active: title === "Users", href: "/users" }, //for every user there is a different dashboard which will be routed via the user tile
     { icon: Home, label: "Dashboard", active: title === "Dashboard", href: "/" },
     { icon: FileText, label: "Reports", active: title === "Reports", href: "/reports" },
-    { icon: Users, label: "Users", active: title === "Users", href: "/users" },
-    { icon: Settings, label: "Settings", active: title === "Settings", href: "/settings" },
     { icon: MessageCircle, label: "Chat", active: title === "Chat", href: "/chat" },
   ];
   return (
@@ -50,7 +49,8 @@ export default function Sidebar({ title }: { title: string }) {
           }}>
           {sidebarItems.map((item, index) => (
             <motion.li
-              key={item.label}
+              key={item.label} 
+              className={item.label=="Users" ? "mb-7" : ""}
               variants={{
                 hidden: { x: -20, opacity: 0 },
                 visible: {
